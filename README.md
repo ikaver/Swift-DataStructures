@@ -3,10 +3,7 @@ Swift-DataStructures
 
 Implementing a small library of generic data structures in Swift.
 
-
-##Data Structures
-
-[Priority Queue] (https://github.com/ikaver/Swift-DataStructures/blob/master/Swift-DataStructures/MinPQ.swift)
+##[Priority Queue] (https://github.com/ikaver/Swift-DataStructures/blob/master/Swift-DataStructures/MinPQ.swift)
 
 A simple generic priority queue implementation with a binary heap.
 Prioritizes its elements according to a given compare function.
