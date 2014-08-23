@@ -10,9 +10,13 @@
 //  pq.extend([1, 2, 100, 3])
 //  let highestPriority = pq.removeMin() //returns 100
 //  Using the < operator, smaller elements will have the highest priority
-//  var pq2 = MinPQ<Int>(<)
+//  var pq = MinPQ<Int>(<)
 //  pq.extend(1...100)
-//  let highestPriority2 = pq.removeMin() //returns 1
+//  let highestPriority = pq.removeMin() //returns 1
+//  var pq = MinPQ<String>(array: ["Hi", "Hello", "Goodbye"]) {
+//      s1, s2 in countElements(s1) < countElements(s2)
+//  }
+//  let highestPriority = pq.removeMin() //returns "Hi"
 //  Copyright (c) 2014 Iosef Kaver. All rights reserved.
 //
 
