@@ -6,7 +6,7 @@ Implementing a small library of generic data structures in Swift.
 
 ##Data Structures
 
-Priority Queue:
+[Priority Queue] (https://github.com/ikaver/Swift-DataStructures/blob/master/Swift-DataStructures/MinPQ.swift)
 
 A simple generic priority queue implementation with a binary heap.
 Prioritizes its elements according to a given compare function.
@@ -29,6 +29,6 @@ You can also pass in your own custom compare function
 ```Swift
 var pq = MinPQ<String>(array: ["Hi", "Hello", "Goodbye"]) {
   s1, s2 in countElements(s1) < countElements(s2)
-};
+}
 let highestPriority = pq.removeMin() //returns "Hi"
 ```
