@@ -26,12 +26,10 @@ struct MinPQ<T>{
     private var heap: [T?] = []
     private var size: Int = 0
     private let compareFunc: (T, T) -> Bool
-    private let minimumCapacity = 50
     
     /* Creates a heap that compares its elements with the given compareFunc. */
     init(compareFunc: (T, T) -> Bool) {
         self.compareFunc = compareFunc
-        self.heap.reserveCapacity(self.minimumCapacity)
     }
     
     /* Indicates true iff the heap has no elements */
