@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Iosef Kaver. All rights reserved.
 //
 
-//import Cocoa
 import XCTest
 
 class MinPQTest: XCTestCase {
@@ -20,14 +19,7 @@ class MinPQTest: XCTestCase {
     }
     
     func assertOrderedMinPQ(var pq: MinPQ<Int>) -> Bool {
-        var prev = Int.min
-        while(!pq.empty()) {
-            let current = pq.removeMin()
-            if(prev > current) {
-                return false
-            }
-            prev = current
-        }
+
         return true
     }
 
@@ -38,7 +30,12 @@ class MinPQTest: XCTestCase {
             pq.insert(Int(arc4random()))
             XCTAssert(pq.count() == i+1, "Count doesn't match amount of elements")
         }
-        XCTAssert(assertOrderedMinPQ(pq), "Unordered minpq")
+        var current = 0
+        var prev = Int.min
+        while(!pq.empty()) {
+            current = pq.removeMin()
+            XCTAssert(prev <= current, "Unordered priority queue")
+        }
     }
     
     func testCreateMinPQFromArray() {
@@ -49,7 +46,12 @@ class MinPQTest: XCTestCase {
         }
         var pq = MinPQ<Int>(array: arr, <)
         XCTAssert(pq.count() == size, "Count doesn't match amount of elements")
-        XCTAssert(assertOrderedMinPQ(pq), "Unordered minpq")
+        var prev = Int.min
+        while(!pq.empty()) {
+            let current = pq.removeMin()
+            XCTAssert(prev <= current, "Unordered priority queue")
+            prev = current
+        }
     }
     
     func testExtend() {
@@ -76,10 +78,55 @@ class MinPQTest: XCTestCase {
             "PQ should remain untouched")
     }
     
-    func testDescription() {
-        let pq = MinPQ<Int>(array: [1,2,3], compareFunc: <)
-        XCTAssert(pq.description == "[1, 2, 3]"
-            || pq.description == "[1, 3, 2]", "Description is incorrect \(pq)")
+    func testSmallPQ() {
+        var pq = MinPQ<Int>(<)
+        XCTAssert(pq.empty(), "PQ should be empty")
+        XCTAssert(pq.count() == 0, "PQ should have 0 elements")
+        pq.insert(1)
+        XCTAssert(!pq.empty(), "PQ should have one element")
+        XCTAssert(pq.count() == 1, "PQ should have one element")
+        XCTAssert(pq.min() == 1, "PQ should have 1 as its min element")
+        pq.extend(2...10)
+        XCTAssert(pq.count() == 10, "PQ should have 10 elements")
+        for i in 1...9 {
+            XCTAssert(pq.min() == i && pq.removeMin() == i, "Remove min mismatch")
+        }
+        XCTAssert(pq.count() == 1, "PQ should have one element")
+        XCTAssert(!pq.empty(), "PQ shouldn't be empty")
+        XCTAssert(pq.min() == 10 && pq.removeMin() == 10, "PQ min should be 10")
+        XCTAssert(pq.empty(), "PQ should be empty")
     }
 
+    func testInsertAndRemoveSeveralTimes() {
+        let size = 501
+        var array = Array<Int>(1..<size)
+        var pq = MinPQ<Int>(<)
+        for i in 0...5 {
+            pq.extend(array)
+            for j in 1..<size {
+                XCTAssert(pq.removeMin() == j, "Mismatch in remove min")
+            }
+        }
+        for i in 0...5 {
+            pq.extend(array)
+            for j in 1..<size/2 {
+                XCTAssert(pq.removeMin() == j, "Mismatch in remove min")
+            }
+            for j in 1..<size/2 {
+                pq.insert(j)
+                pq.insert(j)
+                pq.insert(j)
+                pq.insert(j)
+            }
+            for j in 1..<size/2 {
+                XCTAssert(pq.removeMin() == j, "Mismatch in remove min")
+                XCTAssert(pq.removeMin() == j, "Mismatch in remove min")
+                XCTAssert(pq.removeMin() == j, "Mismatch in remove min")
+                XCTAssert(pq.removeMin() == j, "Mismatch in remove min")
+            }
+            for j in size/2..<size {
+                XCTAssert(pq.removeMin() == j, "Mismatch in remove min")
+            }
+        }
+    }
 }

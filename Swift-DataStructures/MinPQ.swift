@@ -23,7 +23,7 @@
 import Foundation
 
 struct MinPQ<T>{
-    private var heap: [T] = []
+    private var heap: [T?] = []
     private var size: Int = 0
     private let compareFunc: (T, T) -> Bool
     private let minimumCapacity = 50
@@ -44,29 +44,35 @@ struct MinPQ<T>{
         return self.size
     }
     
-    /* Returns the element with highest priority in the heap. 
+    /* Returns the element with highest priority in the heap.
        The user is responsible of checking that there is at least one element in
        the heap before calling this function
     */
     func min() -> T {
-        return self.heap[0]
+        return self.heap[0]!
     }
     
     /* Inserts the given element in the heap */
     mutating func insert(elem: T){
-        self.heap.append(elem)
+        if self.size+1 >= self.heap.count {
+            self.heap.extend(Array<T?>(count: self.size + 1, repeatedValue: nil))
+        }
+        self.heap[self.size] = elem
         self.swim(self.size++)
     }
     
-    /* Removes the node with highest priority from the heap.  
+    /* Removes the node with highest priority from the heap.
        The user is responsible of checking that there is at least one element in
        the heap before calling this function
     */
     mutating func removeMin() -> T {
-        let first = self.heap[0]
-        self.heap[0] = self.heap[self.size-1]
-        self.heap.removeLast()
+        let first = self.heap[0]!
         --self.size
+        self.heap[0] = self.heap[self.size]
+        self.heap[self.size] = nil
+        if self.size <= self.heap.count/4 {
+            self.heap.removeRange(self.heap.count/2..<self.heap.count)
+        }
         self.sink(0)
         return first
     }
@@ -123,7 +129,7 @@ struct MinPQ<T>{
     
     /* Evaluates compareFunc on heap[a] and heap[b] */
     private func greater(a: Int, _ b:Int) -> Bool{
-        return self.compareFunc(self.heap[a], self.heap[b])
+        return self.compareFunc(self.heap[a]!, self.heap[b]!)
     }
 }
 
@@ -135,7 +141,7 @@ extension MinPQ {
         self.compareFunc = compareFunc
         self.size = array.count
         /* copy and heapify array */
-        self.heap.extend(array)
+        self.heap.extend(array.map({$0}))
         for var i = size/2; i >= 0; --i {
             self.sink(i)
         }
@@ -155,7 +161,7 @@ extension MinPQ : SequenceType {
     func generate() -> GeneratorOf<T> {
         var generator = self.heap.generate()
         return GeneratorOf {
-            return generator.next()
+            return generator.next()!
         }
     }
 }
