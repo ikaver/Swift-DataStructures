@@ -133,7 +133,7 @@ struct MinPQ<T>{
 
 extension MinPQ {
     
-    /* Creates a priority queue with the contents of the given array and the 
+    /* Creates a priority queue with the contents of the given array and the
     given compare function */
     init(array: [T], compareFunc: (T, T) -> Bool) {
         self.compareFunc = compareFunc
@@ -165,6 +165,24 @@ extension MinPQ : SequenceType {
 }
 
 extension MinPQ {
+    /* Remove elements from the priority queue until it is empty or the condition is met */
+    mutating func removeUntil(condition: (T) -> Bool) {
+        while(!self.empty() && !condition(self.min())) {
+            self.removeMin()
+        }
+    }
+}
+
+extension MinPQ {
+    /* Inserts all the elements in the sequence in the priority queue */
+    mutating func extend<S : SequenceType where S.Generator.Element == T>(sequence: S) {
+        for elem in [T](sequence) {
+            self.insert(elem)
+        }
+    }
+}
+
+extension MinPQ {
     /* Creates a sorted array from the MinPQ. Takes O(N) space and O(N * log(N))
        time complexity */
     func toSortedArray() -> [T] {
@@ -175,15 +193,6 @@ extension MinPQ {
             array.append(pqCopy.removeMin())
         }
         return array
-    }
-}
-
-extension MinPQ {
-    /* Inserts all the elements in the sequence in the priority queue */
-    mutating func extend<S : SequenceType where S.Generator.Element == T>(sequence: S) {
-        for elem in [T](sequence) {
-            self.insert(elem)
-        }
     }
 }
 

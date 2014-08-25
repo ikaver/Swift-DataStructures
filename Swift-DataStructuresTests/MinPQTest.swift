@@ -77,6 +77,23 @@ class MinPQTest: XCTestCase {
         XCTAssertEqual(pq.toSortedArray(), ["Hi", "Hello", "Shalom"],
             "PQ should remain untouched")
     }
+
+    func testRemoveUntil() {
+        var pq = MinPQ<Int>(<)
+        pq.extend(1...10000)
+        pq.removeUntil() {
+            x in x >= 10000
+        }
+        XCTAssert(pq.count() == 1 && pq.min() == 10000, "Remove until incorrect result")
+        pq.removeUntil() {
+            x in x >= 10000
+        }
+        XCTAssert(pq.count() == 1 && pq.min() == 10000, "PQ shouldn't have changed")
+        pq.removeUntil() {
+            x in x < -1
+        }
+        XCTAssert(pq.empty(), "PQ should be empty")
+    }
     
     func testSmallPQ() {
         var pq = MinPQ<Int>(<)
